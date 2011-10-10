@@ -12,15 +12,13 @@ example
 bounce.js
 ---------
 
-Bounce requests to :8001 along to :8000...
+Bounce requests received on :8001 along to :8000...
 
 ````javascript
 var bouncy = require('bouncy');
-var net = require('net');
 
 bouncy(function (req, bounce) {
-    var stream = net.createConnection(8000);
-    bounce(stream);
+    bounce(8000);
 }).listen(8001);
 ````
 
