@@ -4,7 +4,8 @@ var net = require('net');
 var bouncy = require('../');
 
 test('bounce', function (t) {
-    t.plan(6);
+    var iters = 50;
+    t.plan(3 * iters);
     
     var p0 = Math.floor(Math.random() * (Math.pow(2,16) - 1e4) + 1e4);
     var s0 = http.createServer(function (req, res) {
@@ -39,11 +40,12 @@ test('bounce', function (t) {
     var connected = 0;
     function connect () {
         if (++connected !== 3) return;
-        request('beep');
-        request('boop');
+        for (var i = 0; i < iters; i++) {
+            request([ 'beep', 'boop' ][Math.floor(Math.random() * 2)]);
+        }
     }
     
-    var finished = 0;
+    var pending = iters;
     function request (name) {
         var opts = {
             method : 'GET',
@@ -64,7 +66,7 @@ test('bounce', function (t) {
             res.on('end', function () {
                 t.equal(data, name + '!');
                 
-                if (++finished === 2) {
+                if (--pending === 0) {
                     s0.close();
                     s1.close();
                     s2.close();
