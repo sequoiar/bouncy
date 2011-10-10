@@ -6,7 +6,7 @@ test('raw without a host', function (t) {
     t.plan(1);
     
     var port = Math.floor(Math.random() * (Math.pow(2,16) - 1e4) + 1e4);
-    var s = bouncy(function (req, proxy) {
+    var s = bouncy(function (req, bounce) {
         t.strictEqual(req.headers.host, undefined);
         t.end();
         req.socket.end();

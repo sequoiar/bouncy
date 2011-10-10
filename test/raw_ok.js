@@ -8,7 +8,6 @@ test('raw with a host', function (t) {
     var sent = false;
     
     var s = bouncy(function (req, bounce) {
-console.log('bounce!');
         t.equal(req.headers.host, 'lulzy');
         t.ok(sent);
         req.socket.end();

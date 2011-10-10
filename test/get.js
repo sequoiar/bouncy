@@ -6,11 +6,11 @@ var Stream = require('./lib/stream');
 test('GET with http', function (t) {
     var port = Math.floor(Math.random() * (Math.pow(2,16) - 1e4) + 1e4);
     t.plan(3);
-    var s = bouncy(function (req, proxy) {
+    var s = bouncy(function (req, bounce) {
         t.equal(req.headers.host, 'localhost:' + port);
         
         var stream = Stream();
-        proxy(stream);
+        bounce(stream);
         
         stream.write([
             'HTTP/1.1 200 200 OK',

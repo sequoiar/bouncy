@@ -6,9 +6,9 @@ var Stream = require('./lib/stream');
 test('keep alive', function (t) {
     var port = Math.floor(Math.random() * (Math.pow(2,16) - 1e4)) + 1e4;
     
-    var s = bouncy(function (req, proxy) {
+    var s = bouncy(function (req, bounce) {
         var stream = Stream();
-        proxy(stream);
+        bounce(stream);
         
         stream.write([
             'HTTP/1.1 200 OK',
