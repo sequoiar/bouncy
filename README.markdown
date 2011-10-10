@@ -40,8 +40,8 @@ bouncy(function (req, bounce) {
 }).listen(8001);
 ````
 
-methods
-=======
+bouncy(cb)
+==========
 
 There is only one method, `bouncy(cb)`. Your callback `cb` will get these
 arguments:
