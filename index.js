@@ -24,7 +24,11 @@ var handler = bouncy.handler = function (cb, c) {
         buffers = [];
         
         req.pause();
-        cb(req, function (stream) {
+        cb(req, function (stream, y) {
+            if (!stream || !stream.write) {
+                stream = parseArgs(stream, y);
+            }
+            
             var written = 0;
             for (var i = 0; i < bufs.length; i++) {
                 var buf = bufs[i];
@@ -65,3 +69,26 @@ var handler = bouncy.handler = function (cb, c) {
         c.destroy();
     });
 };
+
+function parseArgs (x, y) {
+    if (typeof x === 'string' && typeof y === 'number') {
+        // flip host and port
+        return net.createConnection(y, stream);
+    }
+    else if (typeof x === 'string' && typeof y === 'string'
+    && /^\d+$/.test(y)) {
+        // convert string port to number
+        return net.createConnection(parseInt(y,10), x);
+    }
+    else if (typeof x === 'string' && typeof y === 'string'
+    && /^\d+$/.test(x)) {
+        // convert string port to number, flipped
+        return net.createConnection(parseInt(x,10), y);
+    }
+    else if (y) {
+        return net.createConnection(x, y);
+    }
+    else {
+        return net.createConnection(x);
+    }
+}
