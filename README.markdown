@@ -9,7 +9,7 @@ with the simple command-line tool.
 
 Bouncy is websocket-capable.
 
-Bouncy is [faster than http-proxy@0.7.3](https://gist.github.com/1275259) in
+Bouncy 0.0.4 is [faster than http-proxy 0.7.3](https://gist.github.com/1275259) in
 [this benchmark](https://github.com/substack/bouncy/tree/bench).
 
 example
