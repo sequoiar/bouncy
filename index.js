@@ -19,11 +19,20 @@ var handler = bouncy.handler = function (cb, c) {
     };
     
     var buffers = [];
+    var bufSize = 0;
+    
     function respond (req, bytesInHeader) {
         var bufs = buffers;
         buffers = [];
+        bufSize = 0;
         
-        req.pause();
+        if (req.upgrade) {
+            req.pause();
+        }
+        else {
+            req.socket.pause();
+        }
+        
         cb(req, function (stream, y) {
             if (!stream || !stream.write) {
                 stream = parseArgs(stream, y);
@@ -41,18 +50,33 @@ var handler = bouncy.handler = function (cb, c) {
                     written += buf.length;
                 }
             }
-            req.pipe(stream);
-            stream.pipe(c);
-            req.resume();
+            
+            if (req.upgrade) {
+                req.socket.pipe(stream);
+                stream.pipe(c);
+                req.socket.resume();
+            }
+            else {
+                req.pipe(stream);
+                stream.pipe(c);
+                req.resume();
+            }
         });
     };
     
-    c.on('data', function (buf) {
+    c.on('data', function onData (buf) {
         buffers.push(buf);
+        bufSize += buf.length;
         
         var ret = parser.execute(buf, 0, buf.length);
         if (ret instanceof Error) {
             c.destroy();
+        }
+        else if (parser.incoming && parser.incoming.upgrade) {
+            c.removeListener('data', onData);
+            respond(parser.incoming, bufSize);
+            buffers = [];
+            bufSize = 0;
         }
         else if (request) {
             respond(request, ret);

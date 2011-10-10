@@ -27,7 +27,9 @@
         "test" : "tap test/*.js"
     },
     "devDependencies" : {
-        "tap" : "0.0.x"
+        "tap" : "0.0.x",
+        "websocket-server" : "1.4.x",
+        "websocket-client" : "1.0.x"
     },
     "engines" : {
         "node" : ">=0.4.0"
