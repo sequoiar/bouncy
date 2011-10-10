@@ -1,6 +1,7 @@
 var http = require('http');
 var ServerResponse = http.ServerResponse;
 var parsers = http.parsers;
+var insertHeaders = require('./lib/insert_headers');
 
 var net = require('net');
 
@@ -26,6 +27,7 @@ var handler = bouncy.handler = function (cb, c) {
         var bufs = buffers;
         buffers = [];
         bufSize = 0;
+        var headers = null;
         
         if (req.upgrade) {
             req.pause();
@@ -39,9 +41,15 @@ var handler = bouncy.handler = function (cb, c) {
                 stream = parseArgs(stream, y);
             }
             
+            if (headers) {
+                bytesInHeader += insertHeaders(bufs, headers);
+            }
+            
             var written = 0;
+            
             for (var i = 0; i < bufs.length; i++) {
                 var buf = bufs[i];
+                
                 if (written + buf.length > bytesInHeader) {
                     stream.write(buf.slice(0, bytesInHeader - written));
                     break;
@@ -68,6 +76,11 @@ var handler = bouncy.handler = function (cb, c) {
             var res = new ServerResponse(req);
             res.assignSocket(req.socket);
             return res;
+        };
+        
+        bounce.addHeader = function (key, value) {
+            if (!headers) headers = {};
+            headers[key] = value;
         };
         
         cb(req, bounce);
