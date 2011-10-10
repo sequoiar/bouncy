@@ -3,7 +3,6 @@ var bouncy = require('../');
 var ws = require('websocket-server');
 var wc = require('websocket-client').WebSocket;
 
-
 test('ws', function (t) {
     t.plan(4);
     
