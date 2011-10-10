@@ -34,6 +34,7 @@ bouncy(function (req, bounce) {
     }
     else {
         var res = new ServerResponse(req);
+        res.assignSocket(req.socket);
         res.statusCode = 404;
         res.write('no such host');
         res.end();
