@@ -57,8 +57,9 @@ Use `''` as a default route.
 bouncy(cb)
 ==========
 
-There is only one method, `bouncy(cb)`. Your callback `cb` will get these
-arguments:
+`bouncy(cb)` returns a new net.Server object that you can `.listen()` on.
+
+Your callback `cb` will get these arguments:
 
 req
 ---
@@ -80,6 +81,12 @@ These variants of `bounce()` are sugar for
 `bounce(net.createConnection(port))`
 and
 `bounce(net.createConnection(port, host))`.
+
+var res = bounce.respond()
+--------------------------
+
+Return a new HTTP response object for the request.
+This is useful if you need to write an error result.
 
 install
 =======
