@@ -8,7 +8,6 @@ if (!configFile || !port) {
 
 var fs = require('fs');
 var config = JSON.parse(fs.readFileSync(configFile));
-var ServerResponse = require('http').ServerResponse;
 
 var bouncy = require('bouncy');
 bouncy(function (req, bounce) {
@@ -33,8 +32,7 @@ bouncy(function (req, bounce) {
         bounce(route);
     }
     else {
-        var res = new ServerResponse(req);
-        res.assignSocket(req.socket);
+        var res = bounce.respond();
         res.statusCode = 404;
         res.write('no such host');
         res.end();

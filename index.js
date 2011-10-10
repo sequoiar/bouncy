@@ -1,4 +1,5 @@
 var http = require('http');
+var ServerResponse = http.ServerResponse;
 var parsers = http.parsers;
 
 var net = require('net');
@@ -33,7 +34,7 @@ var handler = bouncy.handler = function (cb, c) {
             req.socket.pause();
         }
         
-        cb(req, function (stream, y) {
+        var bounce = function (stream, y) {
             if (!stream || !stream.write) {
                 stream = parseArgs(stream, y);
             }
@@ -61,7 +62,15 @@ var handler = bouncy.handler = function (cb, c) {
                 stream.pipe(c);
                 req.resume();
             }
-        });
+        };
+        
+        bounce.respond = function () {
+            var res = new ServerResponse(req);
+            res.assignSocket(req.socket);
+            return res;
+        };
+        
+        cb(req, bounce);
     };
     
     c.on('data', function onData (buf) {
