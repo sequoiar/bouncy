@@ -27,7 +27,6 @@ var handler = bouncy.handler = function (cb, c) {
         var bufs = buffers;
         buffers = [];
         bufSize = 0;
-        var headers = null;
         
         if (req.upgrade) {
             req.pause();
@@ -36,13 +35,15 @@ var handler = bouncy.handler = function (cb, c) {
             req.socket.pause();
         }
         
-        var bounce = function (stream, y) {
+        var bounce = function (stream, opts) {
             if (!stream || !stream.write) {
-                stream = parseArgs(stream, y);
+                opts = parseArgs(arguments);
+                stream = opts.stream;
             }
+            if (!opts) opts = {};
             
-            if (headers) {
-                bytesInHeader += insertHeaders(bufs, headers);
+            if (opts.headers) {
+                bytesInHeader += insertHeaders(bufs, opts.headers);
             }
             
             var written = 0;
@@ -78,11 +79,6 @@ var handler = bouncy.handler = function (cb, c) {
             return res;
         };
         
-        bounce.addHeader = function (key, value) {
-            if (!headers) headers = {};
-            headers[key] = value;
-        };
-        
         cb(req, bounce);
     };
     
@@ -116,25 +112,41 @@ var handler = bouncy.handler = function (cb, c) {
     });
 };
 
-function parseArgs (x, y) {
-    if (typeof x === 'string' && typeof y === 'number') {
-        // flip host and port
-        return net.createConnection(y, x);
+function parseArgs (args) {
+    var opts = {};
+    
+    for (var i = 0; i < args.length; i++) {
+        var arg = args[i];
+        
+        if (typeof arg === 'number') {
+            opts.port = arg;
+        }
+        else if (typeof arg === 'string') {
+            if (/^\d+$/.test(arg)) opts.port = parseInt(arg, 10)
+            else if (/\//.test(arg)) opts.unix = arg
+            else opts.host = arg;
+        }
+        else if (typeof arg === 'object') {
+            if (arg.write) opts.stream = arg;
+            else {
+                for (var key in arg) {
+                    opts[key] = arg[key]
+                }
+            }
+        }
     }
-    else if (typeof x === 'string' && typeof y === 'string'
-    && /^\d+$/.test(y)) {
-        // convert string port to number
-        return net.createConnection(parseInt(y,10), x);
+    
+    if (!opts.stream) {
+        if (opts.unix) {
+            opts.stream = net.createConnection(opts.unix);
+        }
+        else if (opts.host && opts.port) {
+            opts.stream = net.createConnection(opts.port, opts.host);
+        }
+        else if (opts.port) {
+            opts.stream = net.createConnection(opts.port);
+        }
     }
-    else if (typeof x === 'string' && typeof y === 'string'
-    && /^\d+$/.test(x)) {
-        // convert string port to number, flipped
-        return net.createConnection(parseInt(x,10), y);
-    }
-    else if (y) {
-        return net.createConnection(x, y);
-    }
-    else {
-        return net.createConnection(x);
-    }
+    
+    return opts;
 }
