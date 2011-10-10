@@ -13,6 +13,9 @@ var bouncy = require('bouncy');
 bouncy(function (req, bounce) {
     var host = (req.headers.host || '').replace(/:\d+$/, '');
     var route = config[host] || config[''];
+    var opts = {
+        headers : { 'x-forwarded-for' : req.socket.remoteAddress }
+    };
     
     if (Array.isArray(route)) {
         // jump to a random route on arrays
@@ -22,14 +25,14 @@ bouncy(function (req, bounce) {
     if (typeof route === 'string') {
         var s = route.split(':');
         if (s[1]) {
-            bounce(s[0], s[1]);
+            bounce(s[0], s[1], opts);
         }
         else {
-            bounce(s);
+            bounce(s, opts);
         }
     }
     else if (route) {
-        bounce(route);
+        bounce(route, opts);
     }
     else {
         var res = bounce.respond();

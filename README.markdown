@@ -52,7 +52,10 @@ listen on:
 
 The `routes.json` file should just map host names to host/port combos.
 Use a colon-separated string to specify a host and port in a route.
-Use `''` as a default route.
+
+Use `""` for the host as a default route.
+
+An x-forwarded-for header will be sent automatically.
 
 bouncy(cb)
 ==========
