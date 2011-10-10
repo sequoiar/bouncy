@@ -66,24 +66,36 @@ req
 
 The node http module request object.
 
-bounce(stream)
---------------
+bounce(stream, opts={})
+-----------------------
 
 Call this function when you're ready to bounce the request to a stream.
 
 The exact request that was received will be written to `stream` and future
 incoming data will be piped to and from it.
 
-bounce(port), bounce(host, port)
---------------------------------
+You can specify header fields to insert into the request with `opts.headers`.
+
+For instance you might want to add an `"x-forwarded-for"` header:
+
+```javascript
+var bouncy = require('bouncy');
+
+bouncy(function (req, bounce) {
+    bounce(5000, { headers : 'x-forwarded-for' : req.socket.remoteAddress });
+}).listen(80);
+````
+
+bounce(port, ...), bounce(host, port, ...)
+------------------------------------------
 
 These variants of `bounce()` are sugar for
 `bounce(net.createConnection(port))`
 and
 `bounce(net.createConnection(port, host))`.
 
-var res = bounce.respond()
---------------------------
+bounce.respond()
+----------------
 
 Return a new HTTP response object for the request.
 This is useful if you need to write an error result.

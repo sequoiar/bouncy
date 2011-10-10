@@ -15,8 +15,7 @@ test('x-forwarded-for', function (t) {
     
     var p1 = Math.floor(Math.random() * (Math.pow(2,16) - 1e4) + 1e4);
     var s1 = bouncy(function (req, bounce) {
-        bounce.addHeader('x-forwarded-for', '1.1.1.1');
-        bounce(p0);
+        bounce(p0, { headers : { 'x-forwarded-for' : '1.1.1.1' } });
     });
     s1.listen(p1, connect);
     
