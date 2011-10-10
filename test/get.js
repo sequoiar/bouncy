@@ -1,16 +1,7 @@
 var test = require('tap').test;
 var bouncy = require('../');
 var http = require('http');
-
-var net = require('net');
-var Stream = function () {
-    var s = new net.Stream;
-    s.readable = true;
-    s.writable = true;
-    s.write = function (buf) { s.emit('data', buf) };
-    s.end = function () { s.emit('end') };
-    return s;
-};
+var Stream = require('./lib/stream');
 
 test('GET with http', function (t) {
     var port = Math.floor(Math.random() * (Math.pow(2,16) - 1e4) + 1e4);
