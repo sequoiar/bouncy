@@ -15,7 +15,7 @@ bounce.js
 Bounce requests to :8001 along to :8000...
 
 ````javascript
-var bouncy = require('../');
+var bouncy = require('bouncy');
 var net = require('net');
 
 bouncy(function (req, proxy) {
