@@ -4,7 +4,8 @@ bouncy
 Bouncy uses node's http parser innards to bounce http requests around to where
 they need to go in an entirely transparent way.
 
-Use bouncy as a load balancer or http host router.
+Use bouncy as a load balancer or http host router, either programmatically or
+with the simple command-line tool.
 
 Bouncy is websocket-capable.
 
@@ -29,18 +30,26 @@ bouncy(function (req, bounce) {
 }).listen(8000);
 ````
 
-bounce.js
----------
+command-line
+============
 
-Bounce all requests received on :8001 along to :8000
+Just create a `routes.json` file like this:
 
 ````javascript
-var bouncy = require('bouncy');
-
-bouncy(function (req, bounce) {
-    bounce(8000);
-}).listen(8001);
+{
+    "beep.example.com" : 8000,
+    "boop.example.com" : 8001
+}
 ````
+
+Then point the `bouncy` command at this `routes.json` file and give it a port to
+listen on:
+
+    bouncy routes.json 80
+
+The `routes.json` file should just map host names to host/port combos.
+Use a colon-separated string to specify a host and port in a route.
+Use `''` as a default route.
 
 bouncy(cb)
 ==========
@@ -75,6 +84,12 @@ install
 With [npm](http://npmjs.org), do:
 
     npm install bouncy
+
+to install as a library or
+
+    npm install -g bouncy
+
+to get the command-line tool.
 
 license
 =======

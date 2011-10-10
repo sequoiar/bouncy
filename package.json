@@ -1,7 +1,7 @@
 {
     "name" : "bouncy",
     "description" : "Bounce HTTP requests around for a load balancer or http host router completely transparently",
-    "version" : "0.0.3",
+    "version" : "0.0.4",
     "repository" : {
         "type" : "git",
         "url" : "git://github.com/substack/bouncy.git"
