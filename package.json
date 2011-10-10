@@ -7,6 +7,9 @@
         "url" : "git://github.com/substack/bouncy.git"
     },
     "main" : "index.js",
+    "bin" : {
+        "bouncy" : "bin/bouncy.js"
+    },
     "keywords" : [
         "http",
         "parse",
