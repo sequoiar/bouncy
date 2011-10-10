@@ -6,6 +6,8 @@ they need to go in an entirely transparent way.
 
 Use bouncy as a load balancer or http host router.
 
+Bouncy is websocket-capable.
+
 example
 =======
 
