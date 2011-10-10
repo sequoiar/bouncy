@@ -24,6 +24,33 @@ bouncy(function (req, bounce) {
 }).listen(8001);
 ````
 
+methods
+=======
+
+There is only one method, `bouncy(cb)`. Your callback `cb` will get these
+arguments:
+
+req
+---
+
+The node http module request object.
+
+bounce(stream)
+--------------
+
+Call this function when you're ready to bounce the request to a stream.
+
+The exact request that was received will be written to `stream` and future
+incoming data will be piped to and from it.
+
+bounce(port), bounce(host, port)
+--------------------------------
+
+These variants of `bounce()` are sugar for
+`bounce(net.createConnection(port))`
+and
+`bounce(net.createConnection(port, host))`.
+
 install
 =======
 
