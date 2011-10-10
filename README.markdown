@@ -2,7 +2,7 @@ bouncy
 ======
 
 Bouncy uses node's http parser innards to bounce http requests around to where
-they need to go.
+they need to go in an entirely transparent way.
 
 Use bouncy as a load balancer or http host router.
 
