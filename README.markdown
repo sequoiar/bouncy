@@ -94,6 +94,8 @@ These variants of `bounce()` are sugar for
 and
 `bounce(net.createConnection(port, host))`.
 
+Optionally you can pass port and host keys to `opts` and it does the same thing.
+
 bounce.respond()
 ----------------
 
