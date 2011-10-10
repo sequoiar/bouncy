@@ -1,6 +1,6 @@
 {
     "name" : "bouncy",
-    "description" : "Bounce HTTP requests around for a load balancer or http host router",
+    "description" : "Bounce HTTP requests around for a load balancer or http host router completely transparently",
     "version" : "0.0.0",
     "repository" : {
         "type" : "git",
@@ -15,7 +15,8 @@
         "balancer",
         "host",
         "route",
-        "router"
+        "router",
+        "transparent"
     ],
     "directories" : {
         "lib" : ".",
