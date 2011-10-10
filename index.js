@@ -97,7 +97,7 @@ var handler = bouncy.handler = function (cb, c) {
 function parseArgs (x, y) {
     if (typeof x === 'string' && typeof y === 'number') {
         // flip host and port
-        return net.createConnection(y, stream);
+        return net.createConnection(y, x);
     }
     else if (typeof x === 'string' && typeof y === 'string'
     && /^\d+$/.test(y)) {
