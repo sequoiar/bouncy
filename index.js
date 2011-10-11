@@ -6,9 +6,20 @@ var insertHeaders = require('./lib/insert_headers');
 var parseArgs = require('./lib/parse_args');
 
 var net = require('net');
+var tls = require('tls');
 
-var bouncy = module.exports = function (cb) {
-    return net.createServer(handler.bind(null, cb));
+var bouncy = module.exports = function (opts, cb) {
+    if (typeof opts === 'function') {
+        cb = opts;
+        opts = {};
+    }
+    
+    if (opts && opts.key && opts.cert) {
+        return tls.createServer(opts, handler.bind(null, cb));
+    }
+    else {
+        return net.createServer(handler.bind(null, cb));
+    }
 };
 
 var handler = bouncy.handler = function (cb, c) {

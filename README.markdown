@@ -7,7 +7,7 @@ they need to go in an entirely transparent way.
 Use bouncy as a load balancer or http host router, either programmatically or
 with the simple command-line tool.
 
-Bouncy is websocket-capable.
+Bouncy is websocket and tls (https) capable.
 
 Bouncy 0.0.4 is [faster than http-proxy 0.7.3](https://gist.github.com/1275259) in
 [this benchmark](https://github.com/substack/bouncy/tree/master/bench).
@@ -55,10 +55,13 @@ Use a colon-separated string to specify a host and port in a route.
 
 Use `""` for the host as a default route.
 
-bouncy(cb)
-==========
+bouncy(opts={}, cb)
+===================
 
 `bouncy(cb)` returns a new net.Server object that you can `.listen()` on.
+
+If you specify `opts.key` and `opts.cert`, the connection will be set to secure
+mode using tls. Do this if you want to make an https router.
 
 Your callback `cb` will get these arguments:
 
