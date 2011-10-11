@@ -80,6 +80,14 @@ You can specify header fields to insert into the request with `opts.headers`.
 By default, `"x-forwarded-for"`, `"x-forwarded-port"`, and `"x-forwarded-proto"`
 are all automatically inserted into the outgoing header.
 
+You can pass in an EventEmitter on `opts.emitter` to listen for `"drop"` events
+which occur when a `.write()` fails which happens with annoying frequency in
+node v0.4.x.
+
+If you pass in an emitter you'll get the connection object on `"drop"` events so
+you can handle these yourself by writing an error message to the stream. If you
+don't pass in an `opts.emitter`, the connection will be `.destroy()`ed.
+
 bounce(port, ...), bounce(host, port, ...)
 ------------------------------------------
 

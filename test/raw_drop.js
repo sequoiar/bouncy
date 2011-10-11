@@ -16,10 +16,11 @@ test('drop a socket', function (t) {
             c.destroy();
             var emitter = new EventEmitter;
             
-            emitter.on('drop', function () {
+            emitter.on('drop', function (c) {
                 process.nextTick(function () {
                     s0.close();
                     s1.close();
+                    c.destroy();
                     t.end();
                 });
             });
