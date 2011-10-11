@@ -1,6 +1,7 @@
 var test = require('tap').test;
 var bouncy = require('bouncy');
 var net = require('net');
+var EventEmitter = require('events').EventEmitter;
 
 test('drop a socket', function (t) {
     t.plan(2);
@@ -13,40 +14,49 @@ test('drop a socket', function (t) {
         
         var c = net.createConnection(p1, function () {
             c.destroy();
+            var emitter = new EventEmitter;
+            
+            emitter.on('drop', function () {
+                process.nextTick(function () {
+                    s0.close();
+                    s1.close();
+                    t.end();
+                });
+            });
+            
             t.doesNotThrow(
-                function () { bounce(c) },
+                function () { bounce(c, { emitter : emitter }) },
                 'bounce should not throw when the connection is closed'
             );
-            
-            s0.close();
-            s1.close();
-            t.end();
         });
     });
-    
-    var s1 = net.createServer(function (c) {
-         // ...
-    });
-    s1.listen(p1);
     
     s0.listen(p0, function () {
         var c = net.createConnection(p0, function () {
-            c.write('GET /lul HT');
+            write('GET /lul HT');
+            
             setTimeout(function () {
-                c.write('TP/1.1\r\nHo');
+                write('TP/1.1\r\nHo');
             }, 20);
             setTimeout(function () {
-                c.write('st: lulz');
+                write('st: lulz');
             }, 40);
             setTimeout(function () {
-                c.write('y\r\nFoo: bar');
+                write('y\r\nFoo: bar');
             }, 60);
             setTimeout(function () {
-                c.write('\r\n\r\n');
+                write('\r\n\r\n');
             }, 80);
-            setTimeout(function () {
-                c.end();
-            }, 100);
         });
+        
+        c.on('error', function () {});
+        
+        function write (msg) {
+            try { c.write(msg) }
+            catch (err) {}
+        }
     });
+    
+    var s1 = net.createServer();
+    s1.listen(p1);
 });

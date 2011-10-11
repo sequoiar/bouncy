@@ -77,7 +77,8 @@ var handler = bouncy.handler = function (cb, c) {
                         if (opts.emitter) {
                             opts.emitter.emit('drop');
                         }
-                        break;
+                        c.destroy();
+                        return;
                     }
                 }
                 else {
@@ -88,7 +89,8 @@ var handler = bouncy.handler = function (cb, c) {
                         if (opts.emitter) {
                             opts.emitter.emit('drop');
                         }
-                        break;
+                        c.destroy();
+                        return;
                     }
                     written += buf.length;
                 }
