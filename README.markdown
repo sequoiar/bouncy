@@ -12,6 +12,8 @@ Bouncy is websocket and tls (https) capable.
 Bouncy 0.0.4 is [faster than http-proxy 0.7.3](https://gist.github.com/1275259) in
 [this benchmark](https://github.com/substack/bouncy/tree/master/bench).
 
+![trampoline](http://substack.net/images/trampoline.png)
+
 example
 =======
 
@@ -124,3 +126,5 @@ license
 =======
 
 MIT/X11
+
+![jumping](http://substack.net/images/jumping.png)
