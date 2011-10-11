@@ -18,12 +18,9 @@ test('drop a socket', function (t) {
                 'bounce should not throw when the connection is closed'
             );
             
-            process.nextTick(function () {
-                req.socket.end();
-                s0.close();
-                s1.close();
-                t.end();
-            });
+            s0.close();
+            s1.close();
+            t.end();
         });
     });
     

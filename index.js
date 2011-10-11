@@ -69,11 +69,27 @@ var handler = bouncy.handler = function (cb, c) {
                 var buf = bufs[i];
                 
                 if (written + buf.length > bytesInHeader) {
-                    stream.write(buf.slice(0, bytesInHeader - written));
-                    break;
+                    try {
+                        stream.write(buf.slice(0, bytesInHeader - written));
+                        break;
+                    }
+                    catch (err) {
+                        if (opts.emitter) {
+                            opts.emitter.emit('drop');
+                        }
+                        break;
+                    }
                 }
                 else {
-                    stream.write(buf);
+                    try {
+                        stream.write(buf);
+                    }
+                    catch (err) {
+                        if (opts.emitter) {
+                            opts.emitter.emit('drop');
+                        }
+                        break;
+                    }
                     written += buf.length;
                 }
             }
