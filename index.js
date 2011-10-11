@@ -51,7 +51,8 @@ var handler = bouncy.handler = function (cb, c) {
                     opts.headers['x-forwarded-for'] = c.remoteAddress;
                 }
                 if (!opts.headers.hasOwnProperty('x-forwarded-port')) {
-                    opts.headers['x-forwarded-port'] = c.remotePort;
+                    var m = (req.headers.host || '').match(/:(\d+)/);
+                    opts.headers['x-forwarded-port'] = m && m[1] || 80;
                 }
                 if (!opts.headers.hasOwnProperty('x-forwarded-proto')) {
                     opts.headers['x-forwarded-proto'] = 'http';
