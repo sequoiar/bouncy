@@ -66,7 +66,8 @@ var handler = bouncy.handler = function (cb, c) {
                     opts.headers['x-forwarded-port'] = m && m[1] || 80;
                 }
                 if (!opts.headers.hasOwnProperty('x-forwarded-proto')) {
-                    opts.headers['x-forwarded-proto'] = 'http';
+                    opts.headers['x-forwarded-proto'] =
+                        c.encrypted ? 'https' : 'http';
                 }
             }
             

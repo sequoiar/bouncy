@@ -38,7 +38,6 @@ test('https', function (t) {
         };
         
         https.get(opts, function (res) {
-console.log('get!');
             t.equal(res.statusCode, 200)
             t.equal(res.headers['content-type'], 'text/plain');
             
@@ -49,7 +48,6 @@ console.log('get!');
             
             res.on('end', function () {
                 t.equal(data, 'beep boop');
-console.log('POW!');
                 s0.close();
                 s1.close();
                 t.end();
