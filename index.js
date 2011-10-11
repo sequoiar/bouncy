@@ -1,7 +1,9 @@
 var http = require('http');
 var ServerResponse = http.ServerResponse;
 var parsers = http.parsers;
+
 var insertHeaders = require('./lib/insert_headers');
+var parseArgs = require('./lib/parse_args');
 
 var net = require('net');
 
@@ -41,6 +43,20 @@ var handler = bouncy.handler = function (cb, c) {
                 stream = opts.stream;
             }
             if (!opts) opts = {};
+            
+            if (!opts.hasOwnProperty('headers')) opts.headers = {};
+            
+            if (opts.headers) {
+                if (!opts.headers.hasOwnProperty('x-forwarded-for')) {
+                    opts.headers['x-forwarded-for'] = c.remoteAddress;
+                }
+                if (!opts.headers.hasOwnProperty('x-forwarded-port')) {
+                    opts.headers['x-forwarded-port'] = c.remotePort;
+                }
+                if (!opts.headers.hasOwnProperty('x-forwarded-proto')) {
+                    opts.headers['x-forwarded-proto'] = 'http';
+                }
+            }
             
             if (opts.headers) {
                 bytesInHeader += insertHeaders(bufs, opts.headers);
@@ -111,42 +127,3 @@ var handler = bouncy.handler = function (cb, c) {
         c.destroy();
     });
 };
-
-function parseArgs (args) {
-    var opts = {};
-    
-    for (var i = 0; i < args.length; i++) {
-        var arg = args[i];
-        
-        if (typeof arg === 'number') {
-            opts.port = arg;
-        }
-        else if (typeof arg === 'string') {
-            if (/^\d+$/.test(arg)) opts.port = parseInt(arg, 10)
-            else if (/\//.test(arg)) opts.unix = arg
-            else opts.host = arg;
-        }
-        else if (typeof arg === 'object') {
-            if (arg.write) opts.stream = arg;
-            else {
-                for (var key in arg) {
-                    opts[key] = arg[key]
-                }
-            }
-        }
-    }
-    
-    if (!opts.stream) {
-        if (opts.unix) {
-            opts.stream = net.createConnection(opts.unix);
-        }
-        else if (opts.host && opts.port) {
-            opts.stream = net.createConnection(opts.port, opts.host);
-        }
-        else if (opts.port) {
-            opts.stream = net.createConnection(opts.port);
-        }
-    }
-    
-    return opts;
-}
