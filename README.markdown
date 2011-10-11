@@ -55,8 +55,6 @@ Use a colon-separated string to specify a host and port in a route.
 
 Use `""` for the host as a default route.
 
-An x-forwarded-for header will be sent automatically.
-
 bouncy(cb)
 ==========
 
@@ -79,15 +77,8 @@ incoming data will be piped to and from it.
 
 You can specify header fields to insert into the request with `opts.headers`.
 
-For instance you might want to add an `"x-forwarded-for"` header:
-
-```javascript
-var bouncy = require('bouncy');
-
-bouncy(function (req, bounce) {
-    bounce(5000, { headers : 'x-forwarded-for' : req.socket.remoteAddress });
-}).listen(80);
-````
+By default, `"x-forwarded-for"`, `"x-forwarded-port"`, and `"x-forwarded-proto"`
+are all automatically inserted into the outgoing header.
 
 bounce(port, ...), bounce(host, port, ...)
 ------------------------------------------
