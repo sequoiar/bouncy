@@ -41,12 +41,7 @@ var handler = bouncy.handler = function (cb, c) {
         buffers = [];
         bufSize = 0;
         
-        if (req.upgrade) {
-            req.pause();
-        }
-        else {
-            req.socket.pause();
-        }
+        req.socket.pause();
         
         var bounce = function (stream, opts) {
             if (!stream || !stream.write) {
@@ -112,16 +107,9 @@ var handler = bouncy.handler = function (cb, c) {
                 }
             }
             
-            if (req.upgrade) {
-                req.socket.pipe(stream);
-                stream.pipe(c);
-                req.socket.resume();
-            }
-            else {
-                req.pipe(stream);
-                stream.pipe(c);
-                req.resume();
-            }
+            req.socket.pipe(stream);
+            stream.pipe(c);
+            req.socket.resume();
         };
         
         bounce.respond = function () {
