@@ -33,7 +33,7 @@ test('chunked transfers should be transparent', function (t) {
             function () { c.write('4\r\nabcd\r\n') },
             function () { c.write('5\r\nefghi\r\n') },
             function () { c.write('7\r\njklmnop\r\n') },
-            function () { c.end() },
+            function () { c.write('0\r\n'); c.end() },
         ];
         
         var iv = setInterval(function () {
@@ -70,7 +70,8 @@ test('chunked transfers should be transparent', function (t) {
                     '5\r',
                     'efghi\r',
                     '7\r',
-                    'jklmnop\r'
+                    'jklmnop\r',
+                    '0\r'
                 ]);
                 
                 t.end();
