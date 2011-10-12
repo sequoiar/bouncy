@@ -31,6 +31,7 @@
     },
     "devDependencies" : {
         "tap" : "0.0.x",
+        "lazy" : "1.0.x",
         "websocket-server" : "1.4.x",
         "websocket-client" : "1.0.x"
     },
