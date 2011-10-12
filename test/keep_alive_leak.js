@@ -20,6 +20,8 @@ test("make sure keep-alives don't leak", function (t) {
             if (times++ < 3) send(redo.bind(null, send))
             else {
                 send(null);
+                s0.close();
+                s1.close();
                 t.end();
             }
         });
@@ -37,7 +39,7 @@ test("make sure keep-alives don't leak", function (t) {
         });
         
         req.on('end', function () {
-            t.deepEqual(data, [ 'abcdefghij' ]);
+            t.equal(data, 'abcdefghij');
             
             res.setHeader('content-type', 'text/plain');
             res.setHeader('connection', 'keep-alive');
@@ -63,7 +65,6 @@ function request (port, t, cb) {
     function send (fn) {
         if (!fn) { c.end(); return }
         
-console.log('send()');
         c.write([
             'POST / HTTP/1.1',
             'Host: beep.boop',
@@ -84,7 +85,7 @@ console.log('send()');
         var iv = setInterval(function () {
             var chunk = chunks.shift();
             if (chunk) c.write(chunk)
-            else {
+            if (chunks.length === 0) {
                 clearInterval(iv);
                 finished = true;
             }
@@ -121,10 +122,11 @@ console.log('send()');
                         '\r',
                         '2\r',
                         'oh\r',
-                        '7\r',
-                        'hello\r',
+                        '8\r',
+                        ' hello\r',
                         '\r',
-                        '0\r'
+                        '0\r',
+                        ''
                     ]);
                     
                     fn();
