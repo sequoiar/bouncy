@@ -30,9 +30,9 @@ test('chunked transfers should be transparent', function (t) {
         });
         
         var chunks = [
-            function () { c.write('abcd') },
-            function () { c.write('efghi') },
-            function () { c.write('jklmnop') },
+            function () { c.write('4\r\nabcd\r\n') },
+            function () { c.write('5\r\nefghi\r\n') },
+            function () { c.write('7\r\njklmnop\r\n') },
             function () { c.end() },
         ];
         
@@ -60,17 +60,17 @@ test('chunked transfers should be transparent', function (t) {
             
             lazy(c).lines.map(String).join(function (lines) {
                 t.deepEqual(lines, [
-                    'HTTP/1.1 200 200 OK',
-                    'Content-Type: text/plain',
-                    'Transfer-Encoding: chunked',
-                    'Connection: close',
-                    '',
-                    '4',
-                    'abcd',
-                    '5',
-                    'efghi',
-                    '7',
-                    'jklmnop'
+                    'HTTP/1.1 200 200 OK\r',
+                    'Content-Type: text/plain\r',
+                    'Transfer-Encoding: chunked\r',
+                    'Connection: close\r',
+                    '\r',
+                    '4\r',
+                    'abcd\r',
+                    '5\r',
+                    'efghi\r',
+                    '7\r',
+                    'jklmnop\r'
                 ]);
                 
                 t.end();
